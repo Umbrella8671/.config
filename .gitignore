@@ -1,0 +1,29 @@
+# Git ignore file for user configuration files and caches
+
+# macOS specific
+.DS_Store
+
+
+# zsh
+zsh/secrets.zsh
+
+
+# config
+zsh/site-functions
+lazyvim.json
+configstore
+git
+jupyter
+ipython
+wandb
+swanlab
+npm
+docker
+
+
+# CLI tools
+claude 
+codex
+copilot
+gemini
+

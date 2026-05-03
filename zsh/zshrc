@@ -1,0 +1,19 @@
+# ~/.zshrc
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+
+# Load Zsh configuration files
+source "$HOME/.config/zsh/environments.zsh"
+source "$HOME/.config/zsh/options.zsh"
+source "$HOME/.config/zsh/aliases.zsh"
+source "$HOME/.config/zsh/functions.zsh"
+source "$HOME/.config/zsh/completions.zsh"
+source "$HOME/.config/zsh/keymaps.zsh"
+source "$HOME/.config/zsh/theme.zsh"
+
+
