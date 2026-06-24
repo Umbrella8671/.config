@@ -1,0 +1,27 @@
+#:schema https://yazi-rs.github.io/schemas/keymap.json
+
+[mgr]
+prepend_keymap = [
+  { on = ".", run = "hidden toggle", desc = "Toggle hidden files" },
+
+  { on = ["g", "h"], run = "cd ~", desc = "Go home" },
+  { on = ["g", "d"], run = "cd ~/Downloads", desc = "Go downloads" },
+  { on = ["g", "c"], run = "cd ~/.config", desc = "Go config" },
+  { on = ["g", "y"], run = "cd ~/.config/yazi", desc = "Go Yazi config" },
+
+  { on = ["l", "n"], run = "linemode none", desc = "Hide line mode" },
+  { on = ["l", "m"], run = "linemode mtime", desc = "Show modified time" },
+  { on = ["l", "s"], run = "linemode size", desc = "Show file size" },
+
+  { on = ["F", "f"], run = "plugin fzf", desc = "Fuzzy jump via fzf" },
+  { on = ["F", "r"], run = "search --via=rg", desc = "Search file contents via ripgrep" },
+  { on = ["F", "n"], run = "search --via=fd", desc = "Search file names via fd" },
+
+  { on = ["s", "n"], run = "sort natural --dir-first", desc = "Sort naturally" },
+  { on = ["s", "m"], run = "sort mtime --reverse --dir-first", desc = "Sort by modified time" },
+  { on = ["s", "s"], run = "sort size --reverse --dir-first", desc = "Sort by size" },
+  { on = ["s", "f"], run = "search --via=fd", desc = "Search file names via fd" },
+  { on = ["s", "r"], run = "search --via=rg", desc = "Search file contents via ripgrep" },
+  { on = ["s", "z"], run = "plugin fzf", desc = "Fuzzy jump via fzf" },
+  { on = ["s", "g"], run = "search --via=rg", desc = "Search file contents" },
+]

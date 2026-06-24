@@ -1,0 +1,224 @@
+" ============================================================================
+"  ~/.config/vim/vimrc  —  Main vim configuration
+"  Vim auto-discovers ~/.vim/vimrc when ~/.vimrc is absent
+" ============================================================================
+
+" ---- viminfo location (MUST be set early, before viminfo is read) ----------
+set viminfofile=~/.cache/vim/viminfo  " Keep viminfo inside ~/.cache/vim/ instead of ~/
+
+" ---- Basics ----------------------------------------------------------------
+set nocompatible                " Use Vim defaults, not Vi
+set encoding=utf-8
+filetype plugin indent on       " Enable filetype detection + plugin + indent
+syntax on                       " Syntax highlighting
+
+" ---- Built-in plugins ------------------------------------------------------
+let g:netrw_dirhistmax = 0      " Do not write ~/.vim/.netrwhist
+
+" Leader key — MUST be set before any <Leader> mappings!
+" Default is \, set to Space for convenience
+let mapleader = " "
+" Note: <Leader><Space> = Space+Space, <Leader>ve = Space+v+e, etc.
+
+" ---- Line numbers ----------------------------------------------------------
+set number                      " Show absolute line numbers
+set relativenumber              " Show relative numbers (hybrid mode in Vim 7.4+)
+" Hybrid: current line shows absolute, rest show relative — nice for 5j/10dd
+
+" ---- Search ----------------------------------------------------------------
+set hlsearch                    " Highlight search results
+set incsearch                   " Show matches while typing
+set ignorecase                  " Case-insensitive search by default
+set smartcase                   " Override when pattern has uppercase (e.g. /Foo)
+" Clear search highlight with <Leader><Space>
+nnoremap <silent> <Leader><Space> :nohlsearch<CR>
+
+" ---- Tabs & Indentation ----------------------------------------------------
+set expandtab                   " Spaces instead of tabs
+set tabstop=4                   " Tab width = 4 spaces
+set shiftwidth=4                " Indent width = 4
+set softtabstop=4               " Backspace deletes 4 spaces like a tab
+set autoindent                  " Auto-indent new lines
+" NOTE: smartindent removed — it breaks #-comment indentation in Python/YAML/etc.
+
+" ---- Appearance ------------------------------------------------------------
+set showcmd                     " Show (partial) command in status line
+set showmode                    " Show current mode
+set ruler                       " Show cursor position (row,col)
+set laststatus=2                " Always show status line
+set cursorline                 " Highlight current line
+set colorcolumn=                " Column  reference, +1 highlights beyond textwidth
+set wildmenu                    " Tab-completion menu in command mode
+set wildmode=list:longest,full  " Complete like bash
+set list                        " Show invisible characters
+set listchars=tab:▸\ ,trail:·   " Show tabs as ▸ and trailing spaces as ·
+set showmatch                   " Briefly jump to matching bracket
+set matchtime=2                 " Time for match jumping (tenths of sec)
+
+" ---- Editing ---------------------------------------------------------------
+set backspace=indent,eol,start  " Backspace works normally
+set hidden                      " Allow switching buffers without saving
+set autoread                    " Auto-reload files changed outside vim
+" ---- System clipboard ------------------------------------------------------
+if has('clipboard')
+  set clipboard=unnamed,unnamedplus
+else
+  let s:clip = {}
+  if executable('pbcopy')           " macOS
+    let s:clip.copy = 'pbcopy'
+    let s:clip.paste = 'pbpaste'
+  elseif executable('wl-copy')      " Wayland
+    let s:clip.copy = 'wl-copy'
+    let s:clip.paste = 'wl-paste'
+  elseif executable('xclip')        " X11
+    let s:clip.copy = 'xclip -selection clipboard'
+    let s:clip.paste = 'xclip -selection clipboard -o'
+  endif
+
+  if !empty(s:clip)
+    augroup SystemClipboard
+      autocmd!
+      execute 'autocmd TextYankPost * if v:event.operator ==# "y" | call system(s:clip.copy, getreg(v:event.regname)) | endif'
+    augroup END
+
+    execute 'nnoremap <Leader>p :r !' . s:clip.paste . '<CR>'
+    execute 'inoremap <Leader>p <C-r>=substitute(system("' . s:clip.paste . '"), ''\n$'', "", "")<CR>'
+  endif
+endif
+
+" ---- Backup / Swap / Undo — all inside ~/.cache/vim/ ----------------------------
+set nobackup                    " Don't keep persistent backups
+set writebackup                 " But do keep a temp backup while writing (crash safety)
+set backupdir=~/.cache/vim/backup//   " Backup files go here (if/when backup is on)
+set directory=~/.cache/vim/swap//     " Keep swap files in ~/.cache/vim/swap/
+set undodir=~/.cache/vim/undo//       " Persistent undo files
+set undofile                    " Enable persistent undo
+
+" ---- Mouse & Navigation ----------------------------------------------------
+set mouse=a                     " Enable mouse in all modes
+set scrolloff=5                 " Keep 5 lines visible above/below cursor
+set sidescrolloff=5             " Same for horizontal scrolling
+set splitbelow                  " Horizontal splits open below
+set splitright                  " Vertical splits open to the right
+set breakindent                 " Wrapped lines keep their indentation
+" Ctrl+h/j/k/l move between windows
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" ---- Key Mappings ----------------------------------------------------------
+nnoremap <Leader>ve :e $MYVIMRC<CR>
+nnoremap <Leader>vr :source $MYVIMRC<CR>
+
+" Save with Ctrl+S
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>a
+
+" Quit without saving
+nnoremap <Leader>q :q<CR>
+nnoremap <Leader>Q :q!<CR>
+
+" ---- Split management (Leader + s...) --------------------------------------
+" Vertical/horizontal split
+nnoremap <Leader>sv :vsp<CR>
+nnoremap <Leader>sh :sp<CR>
+" Close/equalize/resize current window
+nnoremap <Leader>sc :close<CR>
+nnoremap <Leader>s= <C-w>=
+nnoremap <Leader>s> :vertical resize +5<CR>
+nnoremap <Leader>s< :vertical resize -5<CR>
+nnoremap <Leader>s+ :resize +3<CR>
+nnoremap <Leader>s- :resize -3<CR>
+
+" ---- Fuzzy finding and project search -------------------------------------
+let s:fzf_home = expand('/opt/homebrew/opt/fzf')
+if isdirectory(s:fzf_home)
+  execute 'set runtimepath+=' . fnameescape(s:fzf_home)
+  silent! runtime plugin/fzf.vim
+endif
+
+function! s:ProjectFilesCommand() abort
+  if executable('rg')
+    return 'rg --files --hidden --glob "!.git/*"'
+  elseif executable('fd')
+    return 'fd --type f --hidden --exclude .git'
+  endif
+  return 'find . -type f -not -path "*/.git/*"'
+endfunction
+
+function! s:FzfFiles() abort
+  if !exists('*fzf#run') || !exists('*fzf#wrap')
+    echohl WarningMsg
+    echom 'fzf.vim not found. Install/load fzf first.'
+    echohl None
+    return
+  endif
+
+  call fzf#run(fzf#wrap('files', {
+        \ 'source': s:ProjectFilesCommand(),
+        \ 'options': '--prompt "Files> " --multi'
+        \ }, 0))
+endfunction
+
+function! s:Ripgrep(query) abort
+  if !executable('rg')
+    echohl WarningMsg
+    echom 'rg not found. Install with: brew install ripgrep'
+    echohl None
+    return
+  endif
+
+  let l:query = empty(a:query) ? input('Rg> ') : a:query
+  if empty(l:query)
+    return
+  endif
+
+  let &grepprg = 'rg --vimgrep --smart-case --hidden --glob "!.git/*"'
+  set grepformat=%f:%l:%c:%m
+  execute 'silent grep! ' . shellescape(l:query)
+  copen
+endfunction
+
+command! Files call s:FzfFiles()
+command! -nargs=* Rg call s:Ripgrep(<q-args>)
+
+" Fuzzy-find files and search project text
+nnoremap <Leader>ff :Files<CR>
+nnoremap <Leader>rg :Rg<Space>
+nnoremap <Leader>rw :Rg <C-r><C-w><CR>
+
+" ---- Filetype-specific overrides ------------------------------------------
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4
+autocmd FileType go      setlocal tabstop=4 shiftwidth=4 softtabstop=4 noexpandtab
+autocmd FileType json,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType markdown setlocal textwidth=80
+
+" ---- Status line (minimal but useful) --------------------------------------
+set statusline=
+set statusline+=%f\             " File name
+set statusline+=%h%w%m%r        " Help/preview/modified/readonly flags
+set statusline+=%=
+set statusline+=%l/%L\          " Line/total lines
+set statusline+=%c\             " Column
+set statusline+=%p%%            " Percentage through file
+
+" ---- Colors ---------------------------------------------------------------
+set termguicolors               " True color support (modern terminals)
+set background=dark
+highlight CursorLine term=underline cterm=underline ctermbg=NONE gui=underline guibg=NONE
+highlight CursorLineNr term=underline cterm=underline,bold ctermfg=141 ctermbg=NONE gui=underline,bold guifg=#8b5fc7 guibg=NONE
+highlight StatusLine term=bold cterm=bold ctermfg=234 ctermbg=225 gui=bold guifg=#211824 guibg=#f0b5d7
+highlight StatusLineNC term=NONE cterm=NONE ctermfg=61 ctermbg=225 gui=NONE guifg=#6f3d92 guibg=#f8d7ea
+
+" Create needed directories on startup if they don't exist
+" (swap, backup, undo)
+if !isdirectory($HOME . '/.cache/vim/backup')
+  call mkdir($HOME . '/.cache/vim/backup', 'p')
+endif
+if !isdirectory($HOME . '/.cache/vim/swap')
+  call mkdir($HOME . '/.cache/vim/swap', 'p')
+endif
+if !isdirectory($HOME . '/.cache/vim/undo')
+  call mkdir($HOME . '/.cache/vim/undo', 'p')
+endif
