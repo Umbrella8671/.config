@@ -205,7 +205,6 @@ set statusline+=%p%%            " Percentage through file
 
 " ---- Colors ---------------------------------------------------------------
 set termguicolors               " True color support (modern terminals)
-set background=dark
 highlight CursorLine term=underline cterm=underline ctermbg=NONE gui=underline guibg=NONE
 highlight CursorLineNr term=underline cterm=underline,bold ctermfg=141 ctermbg=NONE gui=underline,bold guifg=#8b5fc7 guibg=NONE
 highlight StatusLine term=bold cterm=bold ctermfg=234 ctermbg=225 gui=bold guifg=#211824 guibg=#f0b5d7
