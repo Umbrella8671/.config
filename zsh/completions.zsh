@@ -27,6 +27,5 @@ done
 
 
 command -v fzf &> /dev/null && source <(fzf --zsh)
-command -v pnpm &> /dev/null && source <(pnpm completion zsh)
 
 

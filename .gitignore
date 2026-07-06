@@ -20,7 +20,8 @@ swanlab
 npm
 pnpm
 docker
-
+homebrew
+btop
 
 # CLI tools
 claude 
