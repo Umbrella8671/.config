@@ -19,14 +19,21 @@ export JUPYTER_RUNTIME_DIR="$XDG_CACHE_HOME/jupyter/runtime"
 export JUPYTER_DATA_DIR="$XDG_CACHE_HOME/jupyter"
 export IPYTHONDIR="$XDG_CACHE_HOME/ipython"
 export MPLCONFIGDIR="$XDG_CACHE_HOME/matplotlib"
+
+# language cache dir
 # export PYTHONPYCACHEPREFIX="$XDG_CACHE_HOME/python"
 # export GOPATH="$HOME/Developer/toolchains/go"
 # export GOCACHE="$XDG_CACHE_HOME/go/build"
 # export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
+# export RUSTUP_HOME="$XDG_CACHE_HOME/rustup"
+# export CARGO_HOME="$XDG_CACHE_HOME/cargo"
 # export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+
+# deep learning cache dir
 # export TORCH_HOME="$XDG_CACHE_HOME/torch"
 # export TRITON_CACHE_DIR="$XDG_CACHE_HOME/triton"
 # export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
+# export TILELANG_CACHE_DIR="$XDG_CACHE_HOME/tilelang"
 
 
 # Node.js, fnm, pnpm configuration
