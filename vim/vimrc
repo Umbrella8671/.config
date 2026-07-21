@@ -50,8 +50,10 @@ set cursorline                 " Highlight current line
 set colorcolumn=                " Column  reference, +1 highlights beyond textwidth
 set wildmenu                    " Tab-completion menu in command mode
 set wildmode=list:longest,full  " Complete like bash
-set list                        " Show invisible characters
+set nolist                      " Invisible characters hidden by default
 set listchars=tab:▸\ ,trail:·   " Show tabs as ▸ and trailing spaces as ·
+" Toggle invisible characters on/off with <Leader>l
+nnoremap <silent> <Leader>l :set list!<CR>
 set showmatch                   " Briefly jump to matching bracket
 set matchtime=2                 " Time for match jumping (tenths of sec)
 
@@ -221,3 +223,4 @@ endif
 if !isdirectory($HOME . '/.cache/vim/undo')
   call mkdir($HOME . '/.cache/vim/undo', 'p')
 endif
+
