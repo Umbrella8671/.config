@@ -23,11 +23,10 @@ export MPLCONFIGDIR="$XDG_CACHE_HOME/matplotlib"
 
 # language cache dir
 # export PYTHONPYCACHEPREFIX="$XDG_CACHE_HOME/python"
-# export GOPATH="$HOME/Developer/toolchains/go"
-# export GOCACHE="$XDG_CACHE_HOME/go/build"
-# export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
-# export RUSTUP_HOME="$XDG_CACHE_HOME/rustup"
-# export CARGO_HOME="$XDG_CACHE_HOME/cargo"
+# export GOPATH="$XDG_DATA_HOME/go"
+# export GOCACHE="$XDG_CACHE_HOME/go-build"
+# export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+# export CARGO_HOME="$XDG_DATA_HOME/cargo"
 # export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 
 # deep learning cache dir
