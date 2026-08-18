@@ -22,6 +22,10 @@ pnpm
 docker
 homebrew
 btop
+code-server
+vllm
+
+
 
 # CLI tools
 claude 
