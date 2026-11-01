@@ -1,5 +1,22 @@
+# uv.toml
+#
+#
+
+# cache-dir = "/tmp/uv-cache"
+
 # configure python mirror
 python-install-mirror = "https://mirrors.nju.edu.cn/github-release/astral-sh/python-build-standalone/" 
+
+preview-features = [
+    "cache-size",
+    "cache-physical-space",
+    "centralized-project-envs",
+#    "content-addressed-cache",
+    "detect-module-conflicts",
+    "venv-safe-clear",
+]
+
+
 
 # configure pypi mirror
 [[index]]
@@ -10,4 +27,6 @@ default = true
 [[index]]
 name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple/"
+
+
 
