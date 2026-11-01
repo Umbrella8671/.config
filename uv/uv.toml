@@ -10,8 +10,8 @@ python-install-mirror = "https://mirrors.nju.edu.cn/github-release/astral-sh/pyt
 preview-features = [
     "cache-size",
     "cache-physical-space",
-    "centralized-project-envs",
-#    "content-addressed-cache",
+    # "centralized-project-envs",
+    "content-addressed-cache",
     "detect-module-conflicts",
     "venv-safe-clear",
 ]
